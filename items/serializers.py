@@ -47,6 +47,7 @@ class TelegramUserSerializer(ModelSerializer):
 
 
 class ItemSerializer(ModelSerializer):
+
     class Meta:
         model = Item
         fields = '__all__'
