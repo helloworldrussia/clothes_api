@@ -1,7 +1,7 @@
 from rest_framework import serializers
 from rest_framework.serializers import ModelSerializer
 
-from items.models import Item, MediaFile, Category, Brand, TelegramUser, TelegramText
+from items.models import Item, MediaFile, Category, Brand
 
 
 class MediaFileSerializer(ModelSerializer):
@@ -40,20 +40,8 @@ class ItemGetSerializer(ModelSerializer):
         return obj.get_quality_display()
 
 
-class TelegramUserSerializer(ModelSerializer):
-    class Meta:
-        model = TelegramUser
-        fields = '__all__'
-
-
 class ItemSerializer(ModelSerializer):
 
     class Meta:
         model = Item
-        fields = '__all__'
-
-
-class TelegramTextSerializer(ModelSerializer):
-    class Meta:
-        model = TelegramText
         fields = '__all__'

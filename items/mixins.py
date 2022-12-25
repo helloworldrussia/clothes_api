@@ -12,6 +12,6 @@ def create_auth_token(sender, instance=None, created=False, **kwargs):
 
 
 class PageNumberSetPagination(PageNumberPagination):
-    page_size = 2
+    page_size = 3
     page_size_query_param = 'page_size'
     ordering = '-timestamp'

@@ -1,17 +1,17 @@
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import SearchFilter, OrderingFilter
-from rest_framework.permissions import IsAuthenticated, AllowAny
+from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
 
 from items.mixins import PageNumberSetPagination
-from items.models import Item, MediaFile, Category, Brand, TelegramUser, TelegramText
+from items.models import Item, MediaFile, Category, Brand
 from items.serializers import ItemGetSerializer, MediaFileSerializer, CategorySerializer, BrandSerializer, \
-    ItemSerializer, TelegramUserSerializer, TelegramTextSerializer
+    ItemSerializer
 
 
 class ItemViewSet(ModelViewSet):
     permission_classes = [AllowAny]
-    queryset = Item.objects.all()
+    queryset = Item.objects.all().prefetch_related('media_group', 'category', 'brand', 'subscribers')
     filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
     filter_fields = ['category', 'gender', 'price', 'quality', 'brand', 'subscribers']
     search_fields = ['title', 'description']
@@ -39,18 +39,3 @@ class BrandViewSet(ModelViewSet):
     permission_classes = [AllowAny]
     queryset = Brand.objects.all()
     serializer_class = BrandSerializer
-
-
-class TelegramUserViewSet(ModelViewSet):
-    queryset = TelegramUser.objects.all()
-    serializer_class = TelegramUserSerializer
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['telegram_id', 'is_staff']
-
-
-class TelegramTextViewSet(ModelViewSet):
-    permission_classes = [AllowAny]
-    queryset = TelegramText.objects.all()
-    serializer_class = TelegramTextSerializer
-    filter_backends = [DjangoFilterBackend]
-    filter_fields = ['name']
