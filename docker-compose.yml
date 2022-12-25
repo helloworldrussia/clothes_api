@@ -12,7 +12,7 @@ services:
       && python3 manage.py createsuperuser --noinput; exit 0"
     environment:
       - DJANGO_SUPERUSER_USERNAME=admin
-      - DJANGO_SUPERUSER_PASSWORD=admin
+      - DJANGO_SUPERUSER_PASSWORD=12345
       - DJANGO_SUPERUSER_EMAIL=admin@example.com
     volumes:
       - .:/clothes_api
@@ -21,7 +21,7 @@ services:
     image: clothes_api_migrate
     container_name: 'gunicorn'
     restart: always
-    command: /bin/sh -c "python3 -m gunicorn -b 0.0.0.0:614 gucci_api.wsgi --reload"
+    command: /bin/sh -c "python3 -m gunicorn -b 0.0.0.0:614 clothes_api.wsgi --reload"
     volumes:
       - .:/clothes_api
     ports:

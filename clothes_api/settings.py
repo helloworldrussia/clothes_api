@@ -48,7 +48,7 @@ MIDDLEWARE = [
     'debug_toolbar_force.middleware.ForceDebugToolbarMiddleware',
 ]
 
-ROOT_URLCONF = 'gucci_api.urls'
+ROOT_URLCONF = 'clothes_api.urls'
 
 TEMPLATES = [
     {
@@ -66,7 +66,7 @@ TEMPLATES = [
     },
 ]
 
-WSGI_APPLICATION = 'gucci_api.wsgi.application'
+WSGI_APPLICATION = 'clothes_api.wsgi.application'
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
