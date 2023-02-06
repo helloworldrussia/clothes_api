@@ -26,8 +26,8 @@ class MediaFile(models.Model):
 
 class Item(models.Model):
     GENDER_CHOICES = (
-        (1, 'М'),
-        (2, 'Ж'),
+        (1, 'Муж'),
+        (2, 'Жен'),
         (3, 'Унисекс')
     )
 
