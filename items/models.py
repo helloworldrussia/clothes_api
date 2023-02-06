@@ -34,7 +34,7 @@ class Item(models.Model):
     QUALITY_CHOICES = (
         (1, 'Top quality'),
         (2, 'High quality - AAA +'),
-        (3, '1: 1🤩'))
+        (3, '1:1🤩'))
 
     title = models.CharField(max_length=255)
     description = models.CharField(max_length=555)
