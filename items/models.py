@@ -42,8 +42,8 @@ class Item(models.Model):
     quality = models.PositiveSmallIntegerField(choices=QUALITY_CHOICES)
     price = models.DecimalField(max_digits=7, decimal_places=2)
     media_group = models.ManyToManyField(MediaFile, blank=True, null=True)
-    category = models.ManyToManyField(Category, blank=True, null=True)
-    brand = models.ManyToManyField(Brand, blank=True, null=True)
+    category = models.ManyToManyField(Category)
+    brand = models.ManyToManyField(Brand)
     subscribers = models.ManyToManyField(TelegramUser, blank=True, null=True)
 
     def __str__(self):
