@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from rest_framework.serializers import ModelSerializer
+from rest_framework.serializers import ModelSerializer, Serializer
 
 from items.models import Item, MediaFile, Category, Brand
 
@@ -41,7 +41,6 @@ class ItemGetSerializer(ModelSerializer):
 
 
 class ItemSerializer(ModelSerializer):
-
     class Meta:
         model = Item
         fields = '__all__'

@@ -163,11 +163,11 @@ class CategoryApiTestCase(APITestCase):
         # тест на количество запросов к бд
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(url)
-            self.assertEqual(1, len(queries))
+            self.assertEqual(3, len(queries))
         categories = Category.objects.filter(id__in=[self.category_1.id, self.category_2.id])
         serializer_data = CategorySerializer(categories, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
 
     def test_create(self):
         url = reverse('category-list')
@@ -208,11 +208,11 @@ class BrandApiTestCase(APITestCase):
         # тест на количество запросов к бд
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(url)
-            self.assertEqual(1, len(queries))
+            self.assertEqual(3, len(queries))
         brands = Brand.objects.filter(id__in=[self.brand_1.id, self.brand_2.id])
         serializer_data = BrandSerializer(brands, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(serializer_data, response.data)
+        self.assertEqual(serializer_data, response.data['results'])
 
     def test_create(self):
         url = reverse('brand-list')

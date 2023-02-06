@@ -11,9 +11,19 @@ from items.serializers import ItemGetSerializer, MediaFileSerializer, CategorySe
 
 class ItemViewSet(ModelViewSet):
     permission_classes = [AllowAny]
-    queryset = Item.objects.all().prefetch_related('media_group', 'category', 'brand', 'subscribers')
-    filter_backends = [DjangoFilterBackend, SearchFilter, OrderingFilter]
-    filter_fields = ['category', 'gender', 'price', 'quality', 'brand', 'subscribers']
+
+    queryset = Item.objects.all().prefetch_related(
+        'media_group', 'category', 'brand', 'subscribers'
+    )
+
+    filter_backends = [
+        DjangoFilterBackend, SearchFilter, OrderingFilter
+    ]
+
+    filter_fields = [
+        'category', 'gender', 'price', 'quality', 'brand', 'subscribers'
+    ]
+
     search_fields = ['title', 'description']
     pagination_class = PageNumberSetPagination
 
@@ -31,11 +41,33 @@ class MediaFileViewSet(ModelViewSet):
 
 class CategoryViewSet(ModelViewSet):
     permission_classes = [AllowAny]
-    queryset = Category.objects.all()
+    queryset = Category.objects.all().prefetch_related(
+        'item_set', 'item_set__brand'
+    )
     serializer_class = CategorySerializer
+    pagination_class = PageNumberSetPagination
+
+    filter_backends = [
+        DjangoFilterBackend
+    ]
+
+    filter_fields = [
+        'item__brand', 'item__gender', 'item__quality'
+    ]
 
 
 class BrandViewSet(ModelViewSet):
     permission_classes = [AllowAny]
-    queryset = Brand.objects.all()
+    queryset = Brand.objects.all().prefetch_related(
+        'item_set', 'item_set__category'
+    )
     serializer_class = BrandSerializer
+    pagination_class = PageNumberSetPagination
+
+    filter_backends = [
+        DjangoFilterBackend
+    ]
+
+    filter_fields = [
+        'item__category', 'item__gender', 'item__quality'
+    ]
