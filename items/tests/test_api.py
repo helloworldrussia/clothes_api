@@ -13,34 +13,39 @@ from items.serializers import ItemGetSerializer, MediaFileSerializer, CategorySe
 
 class ItemsApiTestCase(APITestCase):
     def setUp(self):
-        PageNumberSetPagination.page_size = 3
-
         self.telegram_user_1 = TelegramUser.objects.create(telegram_id=1786, is_staff=True)
-        self.category_1 = Category.objects.create(title="Куртки")
-        self.brand_1 = Brand.objects.create(title="Gucci")
         self.media_file_1 = MediaFile.objects.create(file_id="first-example-file-id")
+        self.media_file_2 = MediaFile.objects.create(file_id="second-example-file-id")
+
+        self.category_1 = Category.objects.create(title="Куртки")
+        self.category_2 = Category.objects.create(title="Футболки")
+        self.category_3 = Category.objects.create(title="Штаны")
+
+        self.brand_1 = Brand.objects.create(title="Gucci")
+        self.brand_2 = Brand.objects.create(title="Nike")
+        self.brand_3 = Brand.objects.create(title="Puma")
 
         self.item_1 = Item.objects.create(
             title="Синяя куртка", description="Синяя куртка от производителя. Размеры: XL, L",
             gender=1, quality=1,
             price=2345
         )
+        self.item_1.category.set([self.category_1])
+        self.item_1.brand.set([self.brand_1])
 
         self.item_2 = Item.objects.create(
             title="Красная футболка", description="Красная футболка. Дорого. Размеры: XL, L, M",
             gender=2, quality=2, price=1390)
+        self.item_2.category.set([self.category_2])
+        self.item_2.brand.set([self.brand_2])
         self.item_2.media_group.set([self.media_file_1])
-        self.item_2.category.set([self.category_1])
-        self.item_2.subscribers.set([self.telegram_user_1])
-        self.item_2.brand.set([self.brand_1])
 
         self.item_3 = Item.objects.create(
             title="Футболка-поло (зеленая)", description="Брендовое поло.",
             gender=2, quality=2, price=1390)
-        self.item_3.media_group.set([self.media_file_1])
         self.item_3.category.set([self.category_1])
+        self.item_3.brand.set([self.brand_3])
         self.item_3.subscribers.set([self.telegram_user_1])
-        self.item_3.brand.set([self.brand_1])
 
     def test_get(self):
         url = reverse('item-list')
@@ -58,13 +63,13 @@ class ItemsApiTestCase(APITestCase):
         data = {
             "price": 1390.00, "category": [self.category_1.id],
             "gender": 2, "quality": 2,
-            "brand": [self.brand_1.id], "subscribers": [self.telegram_user_1.id]
+            "brand": [self.brand_3.id], "subscribers": [self.telegram_user_1.id]
         }
         response = self.client.get(url, data=data)
-        items = Item.objects.filter(id__in=[self.item_3.id, self.item_2.id])
+        items = Item.objects.filter(id__in=[self.item_3.id])
         serializer_data = ItemGetSerializer(items, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
-        self.assertEqual(response.data['count'], 2)
+        self.assertEqual(response.data['count'], 1)
         self.assertEqual(serializer_data, response.data['results'])
 
     def test_create(self):
@@ -85,18 +90,27 @@ class ItemsApiTestCase(APITestCase):
     def test_update(self):
         url = reverse('item-detail', args=(self.item_2.id,))
         data = {
+            "media_group": [self.media_file_2.id],
+            "category": [self.category_1.id],
+            "brand": [self.brand_1.id],
+            "gender": 1, "quality": 1,
             "title": "Красная футболка V2", "description": "description v2",
-            "gender": 3, "quality": 3,
-            "price": '7777.00', "media_group": [],
-            "category": [], "brand": [],
-            "subscribers": []
+            "price": '7777.00',
+            "subscribers": [self.telegram_user_1.id]
         }
         json_data = json.dumps(data)
         response = self.client.put(path=url, data=json_data, content_type='application/json')
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         response = self.client.get(url)
-        data['id'], data['gender'], data['quality'] = self.item_2.id, 'Унисекс', '1: 1🤩'
-        self.assertEqual(response.data, data)
+
+        self.assertEqual(response.data['gender'], 'М')
+        self.assertEqual(response.data['quality'], 'Top quality')
+        self.assertEqual(len(response.data['category']), 1)
+        self.assertEqual(response.data['category'][0]['id'], self.category_1.id)
+        self.assertEqual(len(response.data['brand']), 1)
+        self.assertEqual(response.data['category'][0]['id'], self.brand_1.id)
+        self.assertEqual(len(response.data['media_group']), 1)
+        self.assertEqual(response.data['media_group'][0]['id'], self.media_file_2.id)
 
     def test_delete(self):
         url = reverse('item-detail', args=(self.item_2.id,))
@@ -155,16 +169,41 @@ class MediaFilesApiTestCase(APITestCase):
 
 class CategoryApiTestCase(APITestCase):
     def setUp(self):
-        self.category_1 = Category.objects.create(title="Футболки")
-        self.category_2 = Category.objects.create(title="Куртки")
+        self.category_1 = Category.objects.create(title="Куртки")
+        self.category_2 = Category.objects.create(title="Футболки")
+        self.category_3 = Category.objects.create(title="Штаны")
+
+        self.brand_1 = Brand.objects.create(title="Gucci")
+        self.brand_2 = Brand.objects.create(title="Nike")
+        self.brand_3 = Brand.objects.create(title="Puma")
+
+        self.item_1 = Item.objects.create(
+            title="Синяя куртка", description="Синяя куртка от производителя. Размеры: XL, L",
+            gender=1, quality=1,
+            price=2345
+        )
+        self.item_1.category.set([self.category_1])
+        self.item_1.brand.set([self.brand_1])
+
+        self.item_2 = Item.objects.create(
+            title="Красная футболка", description="Красная футболка. Дорого. Размеры: XL, L, M",
+            gender=2, quality=2, price=1390)
+        self.item_2.category.set([self.category_2])
+        self.item_2.brand.set([self.brand_1])
+
+        self.item_3 = Item.objects.create(
+            title="Футболка-поло (зеленая)", description="Брендовое поло.",
+            gender=2, quality=2, price=1390)
+        self.item_3.category.set([self.category_1])
+        self.item_3.brand.set([self.brand_3])
 
     def test_get(self):
         url = reverse('category-list')
         # тест на количество запросов к бд
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(url)
-            self.assertEqual(3, len(queries))
-        categories = Category.objects.filter(id__in=[self.category_1.id, self.category_2.id])
+            self.assertEqual(4, len(queries))
+        categories = Category.objects.all()
         serializer_data = CategorySerializer(categories, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data['results'])
@@ -197,19 +236,51 @@ class CategoryApiTestCase(APITestCase):
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
 
+    def test_filters(self):
+        url = reverse('category-list')
+        url += f'?brand={self.brand_1.id}&gender=1&quality=1'
+        response = self.client.get(url)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['results'][0]['id'], self.category_1.id)
+
 
 class BrandApiTestCase(APITestCase):
     def setUp(self):
-        self.brand_1 = Brand.objects.create(title="Nike")
-        self.brand_2 = Brand.objects.create(title="Kappa")
+        self.category_1 = Category.objects.create(title="Куртки")
+        self.category_2 = Category.objects.create(title="Футболки")
+        self.category_3 = Category.objects.create(title="Штаны")
+
+        self.brand_1 = Brand.objects.create(title="Gucci")
+        self.brand_2 = Brand.objects.create(title="Nike")
+        self.brand_3 = Brand.objects.create(title="Puma")
+
+        self.item_1 = Item.objects.create(
+            title="Синяя куртка", description="Синяя куртка от производителя. Размеры: XL, L",
+            gender=1, quality=1,
+            price=2345
+        )
+        self.item_1.category.set([self.category_1])
+        self.item_1.brand.set([self.brand_1])
+
+        self.item_2 = Item.objects.create(
+            title="Красная футболка", description="Красная футболка. Дорого. Размеры: XL, L, M",
+            gender=2, quality=2, price=1390)
+        self.item_2.category.set([self.category_2])
+        self.item_2.brand.set([self.brand_1])
+
+        self.item_3 = Item.objects.create(
+            title="Футболка-поло (зеленая)", description="Брендовое поло.",
+            gender=2, quality=2, price=1390)
+        self.item_3.category.set([self.category_1])
+        self.item_3.brand.set([self.brand_3])
 
     def test_get(self):
         url = reverse('brand-list')
         # тест на количество запросов к бд
         with CaptureQueriesContext(connection) as queries:
             response = self.client.get(url)
-            self.assertEqual(3, len(queries))
-        brands = Brand.objects.filter(id__in=[self.brand_1.id, self.brand_2.id])
+            self.assertEqual(4, len(queries))
+        brands = Brand.objects.all()
         serializer_data = BrandSerializer(brands, many=True).data
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         self.assertEqual(serializer_data, response.data['results'])
@@ -241,3 +312,10 @@ class BrandApiTestCase(APITestCase):
         self.assertEqual(status.HTTP_204_NO_CONTENT, response.status_code)
         response = self.client.get(url)
         self.assertEqual(response.status_code, status.HTTP_404_NOT_FOUND)
+
+    def test_filters(self):
+        url = reverse('brand-list')
+        url += f'?category={self.category_1.id}&gender=1&quality=1'
+        response = self.client.get(url)
+        self.assertEqual(len(response.data['results']), 1)
+        self.assertEqual(response.data['results'][0]['id'], self.brand_1.id)

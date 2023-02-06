@@ -3,6 +3,7 @@ from rest_framework.filters import SearchFilter, OrderingFilter
 from rest_framework.permissions import AllowAny
 from rest_framework.viewsets import ModelViewSet
 
+from items.filters import ItemDetailsFilterSet
 from items.mixins import PageNumberSetPagination
 from items.models import Item, MediaFile, Category, Brand
 from items.serializers import ItemGetSerializer, MediaFileSerializer, CategorySerializer, BrandSerializer, \
@@ -39,35 +40,22 @@ class MediaFileViewSet(ModelViewSet):
     serializer_class = MediaFileSerializer
 
 
-class CategoryViewSet(ModelViewSet):
+class BaseItemDetailViewSet(ModelViewSet):
     permission_classes = [AllowAny]
+    pagination_class = PageNumberSetPagination
+    filter_backends = [DjangoFilterBackend]
+    filter_class = ItemDetailsFilterSet
+
+
+class CategoryViewSet(BaseItemDetailViewSet):
     queryset = Category.objects.all().prefetch_related(
         'item_set', 'item_set__brand'
     )
     serializer_class = CategorySerializer
-    pagination_class = PageNumberSetPagination
-
-    filter_backends = [
-        DjangoFilterBackend
-    ]
-
-    filter_fields = [
-        'item__brand', 'item__gender', 'item__quality'
-    ]
 
 
-class BrandViewSet(ModelViewSet):
-    permission_classes = [AllowAny]
+class BrandViewSet(BaseItemDetailViewSet):
     queryset = Brand.objects.all().prefetch_related(
         'item_set', 'item_set__category'
     )
     serializer_class = BrandSerializer
-    pagination_class = PageNumberSetPagination
-
-    filter_backends = [
-        DjangoFilterBackend
-    ]
-
-    filter_fields = [
-        'item__category', 'item__gender', 'item__quality'
-    ]
