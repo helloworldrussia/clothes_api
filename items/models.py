@@ -40,7 +40,7 @@ class Item(models.Model):
     description = models.CharField(max_length=555)
     gender = models.PositiveSmallIntegerField(choices=GENDER_CHOICES)
     quality = models.PositiveSmallIntegerField(choices=QUALITY_CHOICES)
-    price = models.DecimalField(max_digits=7, decimal_places=2)
+    price = models.DecimalField(max_digits=10, decimal_places=2)
     media_group = models.ManyToManyField(MediaFile, blank=True, null=True)
     category = models.ManyToManyField(Category)
     brand = models.ManyToManyField(Brand)
