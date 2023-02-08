@@ -37,7 +37,7 @@ class Item(models.Model):
         (3, '1:1🤩'))
 
     title = models.CharField(max_length=255)
-    description = models.CharField(max_length=555)
+    description = models.CharField(max_length=1024)
     gender = models.PositiveSmallIntegerField(choices=GENDER_CHOICES)
     quality = models.PositiveSmallIntegerField(choices=QUALITY_CHOICES)
     price = models.DecimalField(max_digits=10, decimal_places=2)
