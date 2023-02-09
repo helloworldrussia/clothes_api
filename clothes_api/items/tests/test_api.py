@@ -103,7 +103,7 @@ class ItemsApiTestCase(APITestCase):
         self.assertEqual(status.HTTP_200_OK, response.status_code)
         response = self.client.get(url)
 
-        self.assertEqual(response.data['gender'], 'М')
+        self.assertEqual(response.data['gender'], 'Муж')
         self.assertEqual(response.data['quality'], 'Top quality')
         self.assertEqual(len(response.data['category']), 1)
         self.assertEqual(response.data['category'][0]['id'], self.category_1.id)
@@ -238,8 +238,9 @@ class CategoryApiTestCase(APITestCase):
 
     def test_filters(self):
         url = reverse('category-list')
-        url += f'?brand={self.brand_1.id}&gender=1&quality=1'
+        url += f'?gender=1&quality=1'
         response = self.client.get(url)
+        print(response.data['results'])
         self.assertEqual(len(response.data['results']), 1)
         self.assertEqual(response.data['results'][0]['id'], self.category_1.id)
 

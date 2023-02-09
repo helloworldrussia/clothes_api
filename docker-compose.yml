@@ -23,11 +23,12 @@ services:
       - POSTGRES_PASSWORD=pass
 
   nginx:
-    build: ./nginx
-    volumes:
-      - static_volume:/clothes_api/staticfiles
+    image: nginx:1.21-alpine
     ports:
       - 80:80
+    volumes:
+      - static_volume:/clothes_api/staticfiles
+      - ./nginx:/etc/nginx/conf.d
     restart: always
     depends_on:
       - web-app

@@ -42,14 +42,14 @@ class ItemGetSerializerTestCase(TestCase):
         expected_data = [
             {
                 "id": item_1.id, "title": "Синяя куртка",
-                "description": "Синяя куртка от производителя. Размеры: XL, L", "gender": "М",
+                "description": "Синяя куртка от производителя. Размеры: XL, L", "gender": "Муж",
                 "quality": "Top quality", "price": "2345.00",
                 "media_group": [], "category": [],
                 "brand": [], "subscribers": []
             },
             {
                 "id": item_2.id, "title": "Красная футболка",
-                "description": "Красная футболка. Дорого. Размеры: XL, L, M", "gender": "Ж",
+                "description": "Красная футболка. Дорого. Размеры: XL, L, M", "gender": "Жен",
                 "quality": "High quality - AAA +", "price": "1390.00",
                 "media_group": [{"id": media_file_1.id, "file_id": "first-example-file-id"}],
                 "category": [{"id": category_1.id, "title": "Куртки"}],
@@ -59,7 +59,7 @@ class ItemGetSerializerTestCase(TestCase):
             {
                 "id": item_3.id, "title": "Зеленая куртка (футболка в подарок)",
                 "description": "Брендовая куртка с подарком.", "gender": "Унисекс",
-                "quality": "1: 1🤩", "price": "5230.00",
+                "quality": "1:1🤩", "price": "5230.00",
                 "media_group": [{"id": media_file_1.id, "file_id": "first-example-file-id"},
                                 {"id": media_file_2.id, "file_id": "second-example-file-id"}],
                 "category": [{"id": category_1.id, "title": "Куртки"},
@@ -69,6 +69,7 @@ class ItemGetSerializerTestCase(TestCase):
                 "subscribers": [telegram_user_1.id, telegram_user_2.id]
             }
         ]
+
         self.assertEqual(data, expected_data)
 
 

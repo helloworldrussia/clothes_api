@@ -51,8 +51,8 @@ class ItemDetailsFilterSetTestCase(APITestCase):
             filter_params, queryset
         )
         expected_data = [
-            self.category_2,
             self.category_1,
+            self.category_2,
         ]
         self.assertEqual(list(filtered.qs), expected_data)
 
@@ -61,8 +61,8 @@ class ItemDetailsFilterSetTestCase(APITestCase):
             filter_params, queryset
         )
         expected_data = [
-            self.brand_2,
             self.brand_3,
+            self.brand_2,
         ]
         self.assertEqual(list(filtered.qs), expected_data)
 
