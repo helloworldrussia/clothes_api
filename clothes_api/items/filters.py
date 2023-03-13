@@ -9,13 +9,13 @@ class ItemDetailsFilterSet(FilterSet):
     quality = Filter(method='filter_quality')
 
     def filter_gender(self, queryset, name, value):
-        return queryset.filter(item__gender__in=value).distinct()
+        return queryset.filter(item__gender=value).distinct()
 
     def filter_brand(self, queryset, name, value):
-        return queryset.filter(item__brand__in=value).distinct()
+        return queryset.filter(item__brand=value).distinct()
 
     def filter_category(self, queryset, name, value):
-        return queryset.filter(item__category__in=value).distinct()
+        return queryset.filter(item__category=value).distinct()
 
     def filter_quality(self, queryset, name, value):
-        return queryset.filter(item__quality__in=value).distinct()
+        return queryset.filter(item__quality=value).distinct()

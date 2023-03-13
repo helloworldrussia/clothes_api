@@ -1,7 +1,7 @@
 from django.contrib import admin
 from django.contrib.admin import ModelAdmin
 
-from items.models import Item, MediaFile, Category, Brand, TelegramUser
+from items.models import Item, MediaFile, Category, Brand
 
 
 @admin.register(Item)
@@ -21,9 +21,4 @@ class CategoryAdmin(ModelAdmin):
 
 @admin.register(Brand)
 class BrandAdmin(ModelAdmin):
-    pass
-
-
-@admin.register(TelegramUser)
-class TelegramUserAdmin(ModelAdmin):
     pass
